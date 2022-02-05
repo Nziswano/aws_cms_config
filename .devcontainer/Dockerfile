@@ -16,13 +16,15 @@ ARG TARGETARCH
 
 # https://stackoverflow.com/questions/68087991/define-a-path-depending-on-the-target-platform-within-the-dockerfile-in-order-to
 
-RUN case "${TARGETARCH}" in \
-    "amd64")  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"  ;; \
-    "arm64")  curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"  ;; \
-    *) exit 1 ;; \
-    esac; \
-    unzip awscliv2.zip ; \
-    sudo ./aws/install
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install && rm -rf aws awscliv2.zip
+
+# RUN case "${TARGETARCH}" in \
+#     "amd64")  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"  ;; \
+#     "arm64")  curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"  ;; \
+#     *) exit 1 ;; \
+#     esac; \
+#     unzip awscliv2.zip ; \
+#     sudo ./aws/install
 
 # [Optional] If your pip requirements rarely change, uncomment this section to add them to the image.
 # COPY requirements.txt /tmp/pip-tmp/
