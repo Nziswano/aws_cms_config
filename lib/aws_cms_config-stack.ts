@@ -8,6 +8,10 @@ import { TableViewer } from 'cdk-dynamo-table-viewer';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class AwsCmsConfigStack extends Stack {
+
+  public readonly hcViewerUrl: cdk.CfnOutput;
+  public readonly hcEndpoint: cdk.CfnOutput;
+
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
@@ -21,14 +25,22 @@ export class AwsCmsConfigStack extends Stack {
       downstream: hello
     });
 
-    new apigw.LambdaRestApi(this, 'Endpoint', {
+    const gateway = new apigw.LambdaRestApi(this, 'Endpoint', {
       handler: HelloWithHitCounter.handler
     });
 
-    new TableViewer(this, 'ViewHitCounter', {
+    const table_viewer = new TableViewer(this, 'ViewHitCounter', {
       title: 'Hello Hits',
       table: HelloWithHitCounter.table,
       sortBy: '-hits'
     });
+
+    this.hcEndpoint = new cdk.CfnOutput(this, 'GatewayUrl', {
+      value: gateway.url
+    });
+
+    this.hcViewerUrl = new cdk.CfnOutput(this, 'TableViewerUrl', {
+      value: table_viewer.endpoint
+    })
   }
 }
