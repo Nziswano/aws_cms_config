@@ -1,0 +1,24 @@
+{
+  "serverlessConsole.services": [
+    {
+      "type": "cloudformation",
+      "title": "CDK EU Stack",
+      "timeOffsetInMs": 0,
+      "awsProfile": "default",
+      "stacks": [
+        {
+          "region": "eu-central-1",
+          "stackName": "AwsCmsConfigStack",
+          "stage": "dev"
+        }
+      ]
+    },
+    {
+      "type": "dynamodb",
+      "title": "AwsCmsConfigStack-HelloHitCounterHits7AAEBF80-179R4JZP554XU",
+      "tableName": "AwsCmsConfigStack-HelloHitCounterHits7AAEBF80-179R4JZP554XU",
+      "awsProfile": "default",
+      "region": "eu-central-1"
+    }
+  ]
+}

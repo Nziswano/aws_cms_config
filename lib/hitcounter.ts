@@ -9,6 +9,7 @@ export interface HitCounterProps {
 
 export class HitCounter extends Construct {
     public readonly handler: lambda.Function;
+
     constructor(scope: Construct, id: string, props: HitCounterProps) {
         super(scope, id);
 
@@ -20,10 +21,14 @@ export class HitCounter extends Construct {
             runtime: lambda.Runtime.NODEJS_14_X,
             handler: "hitcounter.handler",
             code: lambda.Code.fromAsset("lambda"),
-            environment:
+            environment: {
                 DOWNSTREAM_FUNCTION_NAME: props.downstream.functionName,
                 HITS_TABLE_NAME: table.tableName
+            }
         });
+
+        table.grantReadWriteData(this.handler);
+        props.downstream.grantInvoke(this.handler);
         
     }
 }
