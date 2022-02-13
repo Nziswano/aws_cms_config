@@ -4,6 +4,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigw from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
 import { HitCounter } from './hitcounter';
+import { TableViewer } from 'cdk-dynamo-table-viewer';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class AwsCmsConfigStack extends Stack {
@@ -22,6 +23,12 @@ export class AwsCmsConfigStack extends Stack {
 
     new apigw.LambdaRestApi(this, 'Endpoint', {
       handler: HelloWithHitCounter.handler
+    });
+
+    new TableViewer(this, 'ViewHitCounter', {
+      title: 'Hello Hits',
+      table: HelloWithHitCounter.table,
+      sortBy: '-hits'
     });
   }
 }
