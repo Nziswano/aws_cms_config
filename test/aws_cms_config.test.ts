@@ -4,7 +4,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { HitCounter } from '../lib/hitcounter';
 import { LambdaApplication } from 'aws-cdk-lib/aws-codedeploy';
 
-test('DynamoDB Table Created', () => {
+test('DynamoDB Table Created with Encryption', () => {
     const stack = new cdk.Stack();
 
     new HitCounter(stack, 'MyTestConstruct', {
@@ -17,6 +17,9 @@ test('DynamoDB Table Created', () => {
 
     const template = Template.fromStack(stack);
     template.resourceCountIs("AWS::DynamoDB::Table", 1);
+    template.hasResourceProperties('AWS::DynamoDB::Table', {
+        SSESpecification: { SSEEnabled: true }
+    });
 });
 
 test('Lambda has Environment Variables', () => {
@@ -46,5 +49,20 @@ test('Lambda has Environment Variables', () => {
             }
         }
     });
+});
+
+test('read capacity can be configured', () => {
+    const stack = new cdk.Stack();
+
+    expect(() => {
+        new HitCounter(stack, 'MyTestConstruct', {
+            downstream: new lambda.Function(stack, 'TestFunction', {
+                runtime: lambda.Runtime.NODEJS_14_X,
+                handler: 'hello.handler',
+                code: lambda.Code.fromAsset('lambda')
+            }),
+            readCapacity: 3
+        });
+    }).toThrowError(/readCapacity must be between 5 and 20/);
 });
 
