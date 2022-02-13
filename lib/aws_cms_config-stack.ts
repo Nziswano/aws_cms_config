@@ -3,7 +3,7 @@ import { Stack, StackProps } from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigw from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
-import { HitCounter } from './hitcounter';
+import { HitCounter } from '../lambda/hitcounter';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class AwsCmsConfigStack extends Stack {
@@ -16,7 +16,7 @@ export class AwsCmsConfigStack extends Stack {
       handler: 'hello.handler'
     });
 
-    const HelloWithHitCounter = new HitCounter(this, 'HolloHitCounter', {
+    const HelloWithHitCounter = new HitCounter(this, 'HelloHitCounter', {
       downstream: hello
     });
 
